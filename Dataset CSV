@@ -1,0 +1,72 @@
+import pandas as pd
+import csv
+pd.options.mode.chained_assignment = None
+
+##Import csv##
+
+path='train.csv'
+with open(path) as f:
+    reader = csv.reader(f, delimiter=",")
+    d = list(reader)
+
+##Import csv END##
+
+##Turn into clean DataFrame##
+apidict = {x:list(y) for x,y in zip(d[0], zip(*d[1:]))}
+df=pd.DataFrame(apidict)
+del df['AnimalID']
+del df['Name']
+dfdog=df[df.AnimalType=='Dog']
+del dfdog['AnimalType']
+
+##Turn into clean DataFrame END##
+
+##CHANGE AgeuponOutcome into float##
+
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('1 month'), 'AgeuponOutcome'] = '0.08'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('2 month'), 'AgeuponOutcome'] = '0.17'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('3 month'), 'AgeuponOutcome'] = '0.25'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('4 month'), 'AgeuponOutcome'] = '0.33'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('5 month'), 'AgeuponOutcome'] = '0.42'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('6 month'), 'AgeuponOutcome'] = '0.50'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('7 month'), 'AgeuponOutcome'] = '0.58'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('8 month'), 'AgeuponOutcome'] = '0.67'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('9 month'), 'AgeuponOutcome'] = '0.75'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('10 month'), 'AgeuponOutcome'] = '0.83'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('11 month'), 'AgeuponOutcome'] = '0.92'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('0 year'), 'AgeuponOutcome'] = '0.0'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('1 year'), 'AgeuponOutcome'] = '1.0'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('2 year'), 'AgeuponOutcome'] = '2.0'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('3 year'), 'AgeuponOutcome'] = '3.0'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('4 year'), 'AgeuponOutcome'] = '4.0'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('5 year'), 'AgeuponOutcome'] = '5.0'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('6 year'), 'AgeuponOutcome'] = '6.0'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('7 year'), 'AgeuponOutcome'] = '7.0'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('8 year'), 'AgeuponOutcome'] = '8.0'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('9 year'), 'AgeuponOutcome'] = '9.0'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('10 year'), 'AgeuponOutcome'] = '10.0'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('11 year'), 'AgeuponOutcome'] = '11.0'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('12 year'), 'AgeuponOutcome'] = '12.0'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('13 year'), 'AgeuponOutcome'] = '13.0'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('14 year'), 'AgeuponOutcome'] = '14.0'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('15 year'), 'AgeuponOutcome'] = '15.0'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('16 year'), 'AgeuponOutcome'] = '16.0'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('day'), 'AgeuponOutcome'] = '0.01'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('1 week'), 'AgeuponOutcome'] = '0.019'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('2 week'), 'AgeuponOutcome'] = '0.038'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('3 week'), 'AgeuponOutcome'] = '0.058'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('4 week'), 'AgeuponOutcome'] = '0.077'
+dfdog.loc[dfdog['AgeuponOutcome'].str.contains('5 week'), 'AgeuponOutcome'] = '0.096'
+dfdog.loc[dfdog['DateTime'].str.contains('2016-02-20 16:37:00'), 'AgeuponOutcome'] = '0.0'
+
+dfdog.AgeuponOutcome=dfdog.AgeuponOutcome.astype(float)
+
+##END STRING TO FLOAT CONVERSION##
+
+
+suo_count=pd.Series(dfdog['SexuponOutcome']).value_counts()
+outcome_count=pd.Series(dfdog['OutcomeType']).value_counts()
+breed_count=pd.Series(dfdog['Breed']).value_counts()
+adopted=dfdog[dfdog.OutcomeType=='Adoption']
+dfdog.columns=['Date_Time','Outcome_type','Outcome_subtype','Sex_upon_Outcome','Age_upon_Outcome (Years)','Breed','Color']
+print(dfdog)
